@@ -33,6 +33,17 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: "CYCLER_TOKEN"
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: {{ .Release.Name }}-auth
+          - name: "CYCLDER_BRIDGEIP"
+            valueFrom:
+              secretKeyRef:
+                key: bridgeIP
+                name: {{ .Release.Name }}-auth
           ports:
             - name: http
               containerPort: 8080

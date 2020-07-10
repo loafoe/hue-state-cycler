@@ -34,8 +34,8 @@ func main() {
 }
 
 type errorResponse struct {
-	code    int
-	message string
+	code    int    `json:"code"`
+	message string `json:"message"`
 }
 
 func jsonErr(e echo.Context, err error) error {
