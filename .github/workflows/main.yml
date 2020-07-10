@@ -17,7 +17,7 @@ jobs:
     - name: Prepare
       id: prepare
       run: |
-        DOCKER_IMAGE=loafoe/hue-cycler
+        DOCKER_IMAGE=loafoe/hue-state-cycler
         DOCKER_PLATFORMS=linux/amd64,linux/arm64
         if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
