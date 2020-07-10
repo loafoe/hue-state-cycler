@@ -65,7 +65,7 @@ func (c *cycleCache) canCycle(lightID int) (bool, time.Time) {
 	defer c.Unlock()
 	now := time.Now()
 	if last, ok := c.cache[lightID]; ok {
-		if last.Add(5 * time.Minute).Before(now) {
+		if now.Before(last.Add(5 * time.Minute)) {
 			return false, last
 		}
 	}
@@ -75,7 +75,9 @@ func (c *cycleCache) canCycle(lightID int) (bool, time.Time) {
 }
 
 func cycleHandler(bridge *huego.Bridge) echo.HandlerFunc {
-	lastCycle := &cycleCache{}
+	lastCycle := &cycleCache{
+		cache: make(map[int]time.Time),
+	}
 
 	return func(e echo.Context) error {
 		deviceID := e.Param("deviceID")
