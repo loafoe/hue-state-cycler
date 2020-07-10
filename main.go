@@ -7,6 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/labstack/echo/v4/middleware"
+
 	"github.com/amimof/huego"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -26,6 +28,7 @@ func main() {
 
 	// Server
 	e := echo.New()
+	e.Use(middleware.Logger())
 	e.GET("/status", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, jsonOK(c, "UP"))
 	})
