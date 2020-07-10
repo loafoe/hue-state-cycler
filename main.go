@@ -57,18 +57,18 @@ type cycleCache struct {
 	cache map[int]time.Time
 }
 
-func (c *cycleCache) canCycle(lightID int) bool {
+func (c *cycleCache) canCycle(lightID int) (bool, time.Time) {
 	c.Lock()
 	defer c.Unlock()
 	now := time.Now()
 	if last, ok := c.cache[lightID]; ok {
 		if last.Add(5 * time.Minute).Before(now) {
-			return false
+			return false, last
 		}
 	}
 	// Cache miss, so init
 	c.cache[lightID] = now
-	return true
+	return true, now
 }
 
 func cycleHandler(bridge *huego.Bridge) echo.HandlerFunc {
@@ -80,19 +80,20 @@ func cycleHandler(bridge *huego.Bridge) echo.HandlerFunc {
 		if err != nil {
 			return jsonErr(e, err)
 		}
-		if lastCycle.canCycle(id) {
-			light, err := bridge.GetLight(id)
-			if err != nil {
-				return jsonErr(e, err)
-			}
+		light, err := bridge.GetLight(id)
+		if err != nil {
+			return jsonErr(e, err)
+		}
+		cycle, last := lastCycle.canCycle(id)
+		if cycle {
 			// Cycle
 			go func() {
 				_ = light.Off()
 				time.Sleep(10 * time.Second)
 				_ = light.On()
 			}()
-			return jsonOK(e, fmt.Sprintf("cycling light %d", id))
+			return jsonOK(e, fmt.Sprintf("cycling light %d at %s", id, last.Format(time.RFC3339)))
 		}
-		return jsonErr(e, fmt.Errorf("light not found or cycled recently"))
+		return jsonErr(e, fmt.Errorf("skippging light cycle %d, last: %s", id, last.Format(time.RFC3339)))
 	}
 }
