@@ -26,6 +26,9 @@ func main() {
 
 	// Server
 	e := echo.New()
+	e.GET("/status", func(c echo.Context) error {
+		return e.JSON(http.StatusOK, jsonOK(c, "UP"))
+	})
 	e.POST("/cycle/:deviceID", cycleHandler(bridge))
 	_ = e.Start(":8080")
 }
