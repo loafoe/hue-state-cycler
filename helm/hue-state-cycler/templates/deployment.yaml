@@ -39,7 +39,7 @@ spec:
               secretKeyRef:
                 key: token
                 name: {{ .Release.Name }}-auth
-          - name: "CYCLDER_BRIDGEIP"
+          - name: "CYCLER_BRIDGEIP"
             valueFrom:
               secretKeyRef:
                 key: bridgeIP
