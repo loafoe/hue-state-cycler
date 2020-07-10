@@ -17,15 +17,12 @@ func main() {
 	viper.SetEnvPrefix("cycler")
 
 	token := viper.GetString("token")
+	bridgeIP := viper.GetString("bridgeIP")
 	if token == "" {
 		fmt.Printf("missing token\n")
 		return
 	}
-	bridge, err := huego.Discover()
-	if err != nil {
-		fmt.Printf("failed to detect bridge\n")
-		return
-	}
+	bridge := huego.New(bridgeIP, token)
 
 	// Server
 	e := echo.New()
