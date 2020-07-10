@@ -34,21 +34,21 @@ func main() {
 }
 
 type errorResponse struct {
-	code    int    `json:"code"`
-	message string `json:"message"`
+	Code    int    `json:"Code"`
+	Message string `json:"Message"`
 }
 
 func jsonErr(e echo.Context, err error) error {
 	return e.JSON(http.StatusBadRequest, errorResponse{
-		code:    http.StatusBadRequest,
-		message: err.Error(),
+		Code:    http.StatusBadRequest,
+		Message: err.Error(),
 	})
 }
 
 func jsonOK(e echo.Context, msg string) error {
 	return e.JSON(http.StatusOK, errorResponse{
-		code:    http.StatusOK,
-		message: msg,
+		Code:    http.StatusOK,
+		Message: msg,
 	})
 }
 
