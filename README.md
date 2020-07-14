@@ -1,4 +1,4 @@
-# hue-state-cyler
+# hue-state-cycler
 This is a tiny microservice which runs on our resident k3s cluster.
 It is used to power cycle the TTN (The Things Network) base station
 which is hooked up to a Hue smart plug. 
